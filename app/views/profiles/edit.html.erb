@@ -1,0 +1,157 @@
+<%= turbo_frame_tag "language" do %>
+	<div class="division" data-controller="color">
+		<div data-controller="dropdown" data-dropdown-type-value="language">
+			<div class="ui large header">Language Proficiency:</div>
+			<%= form_with url: languages_path, method: :post do |f| %>
+				<div class="ui action input attached-btn-input">
+					<div class="input-wrapper">
+						<%= f.text_field "name", data: { dropdown_target: "input" }, autocomplete: "off", placeholder: "Search..." %>
+						<div class="suggestion-box" data-dropdown-target="suggestion"></div>
+					</div>
+					<%= f.button "Add", class: "ui disabled positive button add-btn", data: { dropdown_target: "button" } %>
+				</div>
+			<% end %>
+			<ul class="round-boxes" data-color-target="languages">
+				<% @user.languages.each do |language| %>
+					<li class="expanded">
+						<span><%= language.name %></span>
+						<span class="close-icon">
+							<%= link_to profile_language_path(@user.id, language.id), data: {turbo_method: :delete} do %>
+								<i class="close icon"></i>
+							<% end %>
+						</span>
+					</li>
+				<% end %>
+			</ul>
+			<%= link_to "back", profile_path(current_user.id), class: "edit-btn" %>
+			<div class="horizontal-line"></div>
+		</div>
+	</div>
+<% end %>
+
+<%= turbo_frame_tag "skill" do %>
+	<div class="division">
+		<div data-controller="dropdown" data-dropdown-type-value="skill">
+			<div class="ui large header">Skills:</div>
+			<%= form_with url: skills_path, method: :post do |f| %>
+				<div class="ui action input attached-btn-input">
+					<div class="input-wrapper">
+						<%= f.text_field "name", data: { dropdown_target: "input" }, autocomplete: "off", placeholder: "Search..." %>
+						<div class="suggestion-box" data-dropdown-target="suggestion"></div>
+					</div>
+					<%= f.button "Add", class: "ui disabled positive button add-btn", data: { dropdown_target: "button" } %>
+				</div>
+			<% end %>
+			<ul class="round-boxes">
+				<% @user.skills.each do |skill| %>
+					<li class="expanded">
+						<span><%= skill.name %></span>
+						<span class="close-icon">
+							<%= link_to profile_skill_path(@user.id, skill.id), data: {turbo_method: :delete} do %>
+								<i class="close icon"></i>
+							<% end %>
+						</span>
+					</li>
+				<% end %>
+			</ul>
+			<%= link_to "back", profile_path(current_user.id), class: "edit-btn" %>
+			<div class="horizontal-line"></div>
+		</div>
+	</div>
+<% end %>
+
+<%= turbo_frame_tag "projects" do %>
+	<div class="division">
+		<div class="ui large header">Projects:</div>
+		<div data-controller="dropdown" data-dropdown-type-value="project">
+			<%= form_with url: repos_path, method: :post do |f| %>
+				<div class="ui action input attached-btn-input">
+					<div class="ui action input attached-btn-input">
+						<div class="input-wrapper">
+							<%= f.text_field "name", data: { dropdown_target: "input" }, autocomplete: "off", placeholder: "Find your repo..." %>
+							<div class="suggestion-box" data-dropdown-target="suggestion"></div>
+						</div>
+						<%= f.button "Add", class: "ui disabled positive button add-btn", data: { dropdown_target: "button" } %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+		<%= render partial: "repos/index", locals: {edit: true } %>
+		<%= link_to "back", profile_path(current_user.id), class: "edit-btn" %>
+	</div>
+<% end %>
+
+<%= turbo_frame_tag "profiles" do %>
+	<div class="main-profile">
+		<img class="ui circular image profile-img" src="<%= @user.image_url || image_url("profile-pic.jpg") %>">
+		<p class="ui large header"><span class="username"><%= @user.name %></span></p>
+		<div class="other-profiles division">
+			<div onclick="window.open('<%= @user.portfolio_url %>')" class="portfolio-link">
+				<% if @user.portfolio_url %>
+					<i class="external alternate icon"></i><%= @user.portfolio_url %>
+				<% end %>
+			</div>
+			<div class="svg-icons">
+				<%= if @user.github_username
+						image_tag "github.svg", onclick: "window.open('https://github.com/" + @user.github_username + "')"
+					end %>
+				<%= if @user.hackerrank_username
+						image_tag "hackerrank.svg", onclick: "window.open('https://hackerrank.com/" + @user.hackerrank_username + "')"
+					end %>
+				<%= if @user.stackoverflow_url
+						image_tag "stackoverflow.svg", onclick: "window.open('" + @user.stackoverflow_url + "')"
+					end %>
+				<%= if @user.linkedin_url
+						image_tag "linkedin.svg", onclick: "window.open('" + @user.linkedin_url + "')"
+					end %>
+			</div>
+			
+			<div class="user-form">
+				<% if @user.github_username != nil %>
+					<%= link_to "Use Github Profile Picture", "/picture/update", class:"ui link"%><br/><br/>
+				<% end %>
+				<%= form_with url: profile_path(@user.id), method: :patch do |form| %>
+					<div class="form-inputs">
+						<%= form.fields_for @user do |f| %>
+							<i class="user icon"></i>
+							<%= f.text_field :name, value: @user.name, placeholder: "Name", autocomplete: "off", required: true %>
+							<br/>
+							<i class="file image icon"></i>
+							<%= f.text_field :image_url, value: @user.image_url, placeholder: "Profile picture url", autocomplete: "off" %>
+							<br/>
+							<i class="github icon"></i>
+							<%= f.text_field :github_username, value: @user.github_username, placeholder: "Github Username", autocomplete: "off" %>
+							<br/>
+							<i class="hackerrank icon"></i>
+							<%= f.text_field :hackerrank_username, value: @user.hackerrank_username, placeholder: "Hackerrank Username", autocomplete: "off" %>
+							<br/>
+							<i class="stack overflow icon"></i>
+							<%= f.text_field :stackoverflow_url, value: @user.stackoverflow_url, placeholder: "Stackoverflow Profile Url", autocomplete: "off" %>
+							<br/>
+							<i class="linkedin icon"></i>
+							<%= f.text_field :linkedin_url, value: @user.linkedin_url, placeholder: "Linkedin Profile url", autocomplete: "off" %>
+							<br/>
+							<i class="passport icon"></i>
+							<%= f.text_field :portfolio_url, value: @user.portfolio_url, placeholder: "Your portfolio link", autocomplete: "off" %>
+							<br/>
+							<br/>
+							<%= f.submit "save", class: "ui positive button" %>
+						<% end %>
+					</div>
+				<% end %>
+			</div>
+			
+			<%= button_to profile_resume_path(@user.id), class: "ui basic green icon button", data: { turbo: false }, method: :get do %>
+				<i class="download icon"></i>
+				Resume
+			<% end %>
+			<br/>
+			
+			<%= link_to("(#{@user.achievements.count}) Achievements", profile_achievements_path(@user.id), class: "achievement-link", data: { turbo: false }) %>
+			
+			
+			<div class="horizontal-line"></div>
+		</div>
+		<%= link_to "back", profile_path(@user.id), class: "edit-btn" %>
+	</div>
+<% end %>

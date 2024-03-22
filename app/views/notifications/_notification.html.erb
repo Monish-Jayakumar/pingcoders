@@ -1,0 +1,33 @@
+<% if notification.request? %>
+	<div class="notification request">
+		<%= image_tag (user.image_url || 'profile-pic.jpg'), class: "ui mini avatar image" %>
+		<%= link_to notification.user.name, profile_path(user.id) %> sent a connection request <br/>
+		<div class="buttons">
+			<%= button_to notification_path(notification.id), class: "ui blue button", method: :patch do %>
+				Accept
+			<% end %>
+		</div>
+		<br/>
+	</div>
+<% elsif notification.job? %>
+	<div class="notification">
+		<%= image_tag (user.image_url || 'profile-pic.jpg'), class: "ui mini avatar image" %>
+		<%= link_to notification.user.name, profile_path(user.id) %> posted a new job opportunity
+	</div>
+<% elsif notification.accepted? %>
+	<div class="notification request">
+		<%= image_tag (user.image_url || 'profile-pic.jpg'), class: "ui mini avatar image" %>
+		<%= link_to notification.user.name, profile_path(user.id) %> sent a connection request <br/>
+		<div class="buttons">
+			<%= button_to notification_path(notification.id), class: "ui black button", method: :patch do %>
+				Disconnect
+			<% end %>
+		</div>
+		<br/>
+	</div>
+<% else %>
+	<div class="notification">
+		<%= image_tag (user.image_url || 'profile-pic.jpg'), class: "ui mini avatar image" %>
+		<%= link_to notification.user.name, profile_path(user.id) %> updated their projects <br/>
+	</div>
+<% end %>

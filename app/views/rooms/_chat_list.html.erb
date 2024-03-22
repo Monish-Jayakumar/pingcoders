@@ -1,0 +1,24 @@
+<div class="sixteen wide mobile six wide tablet five wide computer column message-index"
+	 data-controller="find"
+	 data-find-default-url-value="<%= image_path('profile-pic.jpg') %>">
+	
+	<div class="chat-header">
+		<div class="ui icon input">
+			<i class="search icon"></i>
+			<input data-find-target="input" type="text" placeholder="Chat with colleagues..."/>
+		</div>
+	</div>
+	
+	<div class="chats" data-find-target="suggestion" id="rooms">
+		<% if @users.empty? %>
+			<div class="no-chat">
+				<i class="huge frog icon"></i>
+				<div class="empty-msg">You haven't initiated any convo yet..</div>
+			</div>
+		<% else %>
+			<% @rooms.each_with_index do |room, index| %>
+				<%= render room, user: @users[index] %>
+			<% end %>
+		<% end %>
+	</div>
+</div>

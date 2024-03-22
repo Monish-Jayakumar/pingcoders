@@ -1,0 +1,46 @@
+<div class="sign-in-wrapper">
+	<div class="ui raised segments sign-in-box">
+		<div class="ui very padded text segment">
+			<h2 class="ui blue large centered header">Sign up</h2>
+			<div class="ui divider"></div>
+			<br/>
+			
+			<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+				
+				<div class="field">
+					<%= f.label :name %><br/>
+					<div class="sign-in-input"><%= f.text_field :name, autofocus: true, autocomplete: "off", required: true %></div>
+				</div>
+				<br/>
+				
+				<div class="field">
+					<%= f.label :email %><br/>
+					<div class="sign-in-input"><%= f.email_field :email, autocomplete: "off" %></div>
+				</div>
+				<br/>
+				
+				<div class="field">
+					<%= f.label :password %>
+					<div class="sign-in-input"><%= f.password_field :password, autocomplete: "new-password" %></div>
+				</div>
+				<br/>
+				
+				<div class="field">
+					<%= f.label :password_confirmation %><br/>
+					<div class="sign-in-input"><%= f.password_field :password_confirmation, autocomplete: "new-password" %></div>
+				</div>
+				<br/>
+				<%= render "users/shared/error_messages", resource: resource %>
+				<br/>
+				
+				<div class="actions">
+					<%= f.submit "Sign up", class: "ui primary button", data: {turbo: false} %>
+				</div>
+			<% end %>
+		</div>
+		
+		<div class="ui secondary segment">
+			<%= render "users/shared/links" %>
+		</div>
+	</div>
+</div>

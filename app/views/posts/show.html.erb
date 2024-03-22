@@ -1,0 +1,45 @@
+<p style="color: green"><%= notice %></p>
+
+<div class="job-viewer">
+	<div id="<%= dom_id @post %>" class="job-post">
+		<p class="ui big header">
+			<%= @post.role %>
+		</p>
+		
+		<span class="ui header" style="color: var(--light-grey)">
+			<%= @post.project %>
+		</span>
+		
+		<em> &nbsp &#8226 &nbsp  <%= time_ago_in_words @post.created_at %> ago</em>
+		
+		<% unless @post.skills.empty? %>
+			<div style="margin: 30px 0 15px">
+				Skills required:&ensp;&ensp;
+				<% @post.skills.each do |skill| %>
+					<div class="ui blue label">
+						<%= skill.name %>
+					</div>
+				<% end %>
+			</div>
+		<% end %>
+		
+		<hr style="border-color: var(--dark-grey);margin-bottom: 40px"/>
+		
+		<div class="job-details">
+			<%= markdown @post.body %>
+		</div>
+		
+		<div class="post-user">
+			<em>posted by</em>
+			<%= image_tag (@user.image_url || 'profile-pic.jpg'), class: "ui mini avatar image" %>
+			<%= link_to profile_path(@user.id), class: "avatar-username" do %>
+				<span><%= @user.name %></span>
+			<% end %>
+		</div>
+		
+		<% if current_user && @post.user_id == current_user.id %>
+			<%= link_to "Edit", edit_post_path(@post), class: "ui blue button" %>
+		<% end %>
+	</div>
+
+</div>
